@@ -1,0 +1,168 @@
+<html>
+
+<head>
+    <title>Site Calculo</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#alerta").dialog({
+                autoOpen: false,
+                show: {
+                    effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "drop",
+                    duration: 300
+                },
+                title: "Resultado"
+            });
+
+            $("#opener").on("click", function () {
+                $("#dialog").dialog("open");
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <form id="myForm">
+            <label>Valor 1</label>
+            <input type="number" name="valorA">
+            <label>Valor 2</label>
+            <input type="number" name="valorB">
+            <label>Operação</label>
+            <select name="operacao" id="operacao">
+                <option value="soma">Soma</option>
+                <option value="subtracao">Subtração</option>
+                <option value="multiplicacao">Multiplicação</option>
+            </select>
+            <div class="wrapper_botao">
+                <button type="button" id="btnEnvia">Enviar</button>
+                <button type="button" id="btncancela">Limpar</button>
+            </div>
+        </form>
+        <div id="alerta"><h2 id="resultado">
+        </h2></div>
+    </div>
+</body>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        background-color: #dedede;
+        height: 100%;
+        background-color: rgb(255, 157, 0)
+    }
+
+    div.wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #myForm {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: solid 2px;
+        border-radius: 25px;
+        padding: 6em;
+        background-color: #066d9c;
+    }
+
+    #resultado {
+        display: flex;
+        justify-content: center;
+    }
+
+    input[type=number] {
+        padding: 0.5em;
+        border: none;
+        border-bottom: solid 3px #a5ed95;
+    }
+
+    div.wrapper_botao button {
+        padding: 1em;
+        margin-top: 2em;
+        background-color: #dedede;
+        box-shadow: 3px 3px 10px #333;
+        border: solid 1px;
+        border-radius: 3px;
+        transition: 0.5s;
+        font-size: 14pt;
+    }
+
+    div.wrapper_botao button:hover {
+        background-color: #20bb05;
+        color: white;
+        transform: scale(1.2);
+    }
+
+
+    label {
+        color: rgb(0, 0, 0);
+    }
+
+    form label {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 0.5em;
+        margin-top: 0.5em;
+        font-family: 'Times New Roman';
+        font-size: 14pt;
+        color: rgb(0, 0, 0);
+    }
+
+    #operacao {
+        font-size: 14pt;
+    }
+    .ui-dialog-titlebar{
+        text-align: center;
+    }
+</style>
+<script>
+    var btn = document.getElementById("btnEnvia");
+    btn.addEventListener("click", function () {
+        var myForm = document.getElementById('myForm');
+        var formData = new FormData(myForm);
+        var obj = {
+            valorA: +formData.get("valorA"),
+            valorB: +formData.get("valorB"),
+            operacao: formData.get("operacao"),
+            total: 0
+        }
+        callApi(obj)
+    })
+
+    var cancela = document.getElementById('btncancela');
+    cancela.addEventListener("click", function () {
+        document.getElementsByName('valorA')[0].value = '';
+        document.getElementsByName('valorB')[0].value = '';
+        document.getElementById('resultado').innerHTML = '';
+    })
+    async function callApi(obj) {
+        const response = await fetch("https://localhost:5001/User", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify(obj)
+        }).then((response) => {
+            return response.json();
+        })
+            .then((data) => {
+                document.getElementById('resultado').innerHTML = `O resultado total é: ${data.total}!`;
+                $("#alerta").dialog("open")
+
+            })
+    }
+</script>
+
+</html>
