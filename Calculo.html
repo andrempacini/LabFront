@@ -72,7 +72,7 @@
         align-items: center;
         border: solid 2px;
         border-radius: 25px;
-        padding: 6em;
+        padding: 10em;
         background-color: #066d9c;
     }
 
@@ -82,14 +82,15 @@
     }
 
     input[type=number] {
-        padding: 0.5em;
+        padding: 1em;
         border: none;
-        border-bottom: solid 3px #a5ed95;
+        border-bottom: solid 3px #b49530;
+        border-radius: 10px;
     }
 
     div.wrapper_botao button {
         padding: 1em;
-        margin-top: 2em;
+        margin-top: 1em;
         background-color: #dedede;
         box-shadow: 3px 3px 10px #333;
         border: solid 1px;
@@ -116,13 +117,17 @@
         margin-top: 0.5em;
         font-family: 'Times New Roman';
         font-size: 14pt;
-        color: rgb(0, 0, 0);
+        border-bottom: solid 2px;
+        color: rgb(255, 251, 0);
     }
 
     #operacao {
         font-size: 14pt;
     }
     .ui-dialog-titlebar{
+        text-align: center;
+    }
+    .ui-dialog-content{
         text-align: center;
     }
 </style>
@@ -145,9 +150,10 @@
         document.getElementsByName('valorA')[0].value = '';
         document.getElementsByName('valorB')[0].value = '';
         document.getElementById('resultado').innerHTML = '';
+        $('#alerta').dialog("close")
     })
     async function callApi(obj) {
-        const response = await fetch("https://localhost:5001/User", {
+        const response = await fetch("https://localhost:5001/Calculo", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
